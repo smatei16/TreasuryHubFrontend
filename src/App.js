@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import {useEffect} from "react";
 
 function App() {
   // return (
@@ -20,6 +21,13 @@ function App() {
   //     </header>
   //   </div>
   // );
+
+    useEffect(() => {
+        fetch("https://treasury-hub-backend-162bca8c9d0c.herokuapp.com/test/getAll", {method: "GET"})
+            .then((body) => body.json())
+            .then((json) => console.log(json))
+    }, []);
+
   return (
     <div className="App">
       <header className="App-header">
