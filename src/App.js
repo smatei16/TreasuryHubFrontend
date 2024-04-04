@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp/SignUp";
+import SignIn from "./pages/SignIn/SignIn";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/login" element={<SignIn />} />
           </Routes>
         </div>
       </Router>

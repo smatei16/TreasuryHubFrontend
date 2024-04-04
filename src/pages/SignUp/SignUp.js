@@ -29,7 +29,7 @@ export default function SignUp() {
         e.preventDefault();
         const userData = {firstName: firstName, lastName: lastName, email: email, password: password};
         const requestBody = JSON.stringify(userData);
-        fetch(`${URL}/signup`, {
+        fetch(`${URL}/register`, {
             // credentials: 'same-origin',
             headers: {
                 "Content-Type": "application/json",
