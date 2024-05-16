@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --navbar-button-color: #141E46;
+  --first-font: "Exo 2", sans-serif;
+  --second-font: "Roboto", sans-serif;
+}

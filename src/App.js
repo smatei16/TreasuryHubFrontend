@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp/SignUp";
 import SignIn from "./pages/SignIn/SignIn";
+import Navbar from "./pages/Navbar/Navbar";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
     //   </header>
     // </div>
       <Router>
+        <Navbar></Navbar>
         <div className="App">
           <Routes>
             <Route path="/register" element={<SignUp />} />
