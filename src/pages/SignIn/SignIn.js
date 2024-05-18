@@ -4,8 +4,8 @@ import "./SignIn.css";
 
 export default function SignUp() {
 
-    // const URL = "https://treasury-hub-backend-162bca8c9d0c.herokuapp.com";
-    const URL = "http://localhost:8080";
+    const URL = "https://treasury-hub-backend-162bca8c9d0c.herokuapp.com";
+    // const URL = "http://localhost:8080";
     const [email, setEmail]  = useState("");
     const [password, setPassword]  = useState("");
     const [error, setError] = useState("");

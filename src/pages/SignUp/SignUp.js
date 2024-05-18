@@ -4,8 +4,8 @@ import {useNavigate} from "react-router-dom";
 
 export default function SignUp() {
 
-    // const URL = "https://treasury-hub-backend-162bca8c9d0c.herokuapp.com"
-    const URL = "http://localhost:8080"
+    const URL = "https://treasury-hub-backend-162bca8c9d0c.herokuapp.com"
+    // const URL = "http://localhost:8080"
     const [firstName, setFirstName]  = useState("");
     const [lastName, setLastName]  = useState("");
     const [email, setEmail]  = useState("");
