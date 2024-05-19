@@ -4,8 +4,6 @@ import "./SignIn.css";
 
 export default function SignUp() {
 
-    const URL = "https://treasury-hub-backend-162bca8c9d0c.herokuapp.com";
-    // const URL = "http://localhost:8080";
     const [email, setEmail]  = useState("");
     const [password, setPassword]  = useState("");
     const [error, setError] = useState("");
@@ -24,7 +22,7 @@ export default function SignUp() {
         const userData = {email: email, password: password};
         const requestBody = JSON.stringify(userData);
         try {
-            const response = await fetch(`${URL}/login`, {
+            const response = await fetch(`${process.env.REACT_APP_PROD}/login`, {
                 // credentials: 'same-origin',
                 headers: {
                     "Content-Type": "application/json",

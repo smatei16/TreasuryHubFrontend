@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import SignIn from "./pages/SignIn/SignIn";
 import Navbar from "./pages/Navbar/Navbar";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Wallet from "./pages/Wallet/Wallet";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />}></Route>
               <Route path="/register" element={<SignUp />} />
               <Route path="/login" element={<SignIn />} />
+              <Route path="/wallet" element={<Wallet />}  />
           </Routes>
         </div>
       </Router>

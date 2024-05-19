@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96bbafe8-8f86-47d1-aa09-d592674527ce" name="Changes" comment="" />
+    <list default="true" id="96bbafe8-8f86-47d1-aa09-d592674527ce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/SignIn/SignIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignIn/SignIn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/SignUp/SignUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignUp/SignUp.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="TH-19" />
+        <entry key="$PROJECT_DIR$" value="TH-18" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,7 +47,7 @@
     &quot;Node.js.SignUp.js.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;TH-18&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;TH-28&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/PERSONAL/LICENTA/TreasuryHub/treasury-hub-frontend/src/resources&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -70,7 +75,8 @@
       <workItem from="1710587539231" duration="3563000" />
       <workItem from="1711660164868" duration="3131000" />
       <workItem from="1711744660707" duration="9102000" />
-      <workItem from="1716029969185" duration="5293000" />
+      <workItem from="1716029969185" duration="16610000" />
+      <workItem from="1716121949423" duration="15181000" />
     </task>
     <servers />
   </component>

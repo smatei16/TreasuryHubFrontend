@@ -4,8 +4,6 @@ import {useNavigate} from "react-router-dom";
 
 export default function SignUp() {
 
-    const URL = "https://treasury-hub-backend-162bca8c9d0c.herokuapp.com"
-    // const URL = "http://localhost:8080"
     const [firstName, setFirstName]  = useState("");
     const [lastName, setLastName]  = useState("");
     const [email, setEmail]  = useState("");
@@ -34,7 +32,7 @@ export default function SignUp() {
         const userData = {firstName: firstName, lastName: lastName, email: email, password: password, role: "USER"};
         const requestBody = JSON.stringify(userData);
         try {
-            const response = await fetch(`${URL}/register`, {
+            const response = await fetch(`${process.env.REACT_APP_PROD}/register`, {
                 // credentials: 'same-origin',
                 headers: {
                     "Content-Type": "application/json",
