@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn/SignIn";
 import Navbar from "./pages/Navbar/Navbar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Wallet from "./pages/Wallet/Wallet";
+import Budget from "./pages/Budget/Budget";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="/register" element={<SignUp />} />
               <Route path="/login" element={<SignIn />} />
               <Route path="/wallet" element={<Wallet />}  />
+              <Route path="/budgets" element={<Budget />}/>
           </Routes>
         </div>
       </Router>

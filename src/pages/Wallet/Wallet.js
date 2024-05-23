@@ -19,8 +19,8 @@ function BankAccountCard({ account, onEdit, onDelete }) {
                         <span className="wallet-label">Balance</span>
                     </div>
                     <div className="wallet-column">
-                        <span className="wallet-value">{account.accountType.length !== 0 ? account.accountType : '-'}</span>
-                        <span className="wallet-value">{account.accountNumber.length !== 0 ? account.accountNumber : '-'}</span>
+                        <span className="wallet-value">{account.accountType.length !== 0 ? account.accountType : 'Not set'}</span>
+                        <span className="wallet-value">{account.accountNumber.length !== 0 ? account.accountNumber : 'Not set'}</span>
                         <span className="wallet-value">{account.balance}</span>
                     </div>
                     <div className="wallet-column">
@@ -93,7 +93,7 @@ function Wallet() {
                 const data = await response.json();
                 setAccounts(data);
             } catch (error) {
-                console.error('Fetch error: ');
+                console.error('Fetch error');
             }
         };
 
