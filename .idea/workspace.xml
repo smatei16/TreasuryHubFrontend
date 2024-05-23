@@ -7,8 +7,8 @@
     <list default="true" id="96bbafe8-8f86-47d1-aa09-d592674527ce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignIn/SignIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignIn/SignIn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignUp/SignUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignUp/SignUp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Wallet/AccountModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Wallet/AccountModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Wallet/Wallet.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Wallet/Wallet.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="TH-18" />
+        <entry key="$PROJECT_DIR$" value="TH-28" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -47,7 +47,7 @@
     &quot;Node.js.SignUp.js.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;TH-28&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;TH-27&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/PERSONAL/LICENTA/TreasuryHub/treasury-hub-frontend/src/resources&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -76,7 +76,10 @@
       <workItem from="1711660164868" duration="3131000" />
       <workItem from="1711744660707" duration="9102000" />
       <workItem from="1716029969185" duration="16610000" />
-      <workItem from="1716121949423" duration="15181000" />
+      <workItem from="1716121949423" duration="31863000" />
+      <workItem from="1716325773086" duration="556000" />
+      <workItem from="1716326502314" duration="11599000" />
+      <workItem from="1716496558857" duration="357000" />
     </task>
     <servers />
   </component>
