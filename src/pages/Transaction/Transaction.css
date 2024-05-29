@@ -1,0 +1,122 @@
+.transaction-div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5rem;
+    column-gap: 1rem;
+}
+
+.transaction-date {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.transaction-h3 {
+    margin-top: 0;
+    /*color: #333;*/
+}
+
+.transaction-p {
+    color: #666;
+}
+
+.transaction-span {
+    color: blueviolet;
+}
+
+.transaction-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 30%;
+    margin: 1rem;
+}
+
+.transaction-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.transaction-info {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.transaction-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-edit {
+    display: flex;
+    align-items: center;
+}
+
+/*.wallet-add-button {*/
+/*    position: fixed; !* Fixează butonul într-o poziție specifică pe ecran *!*/
+/*    right: 20px; !* 20px de margine dreapta *!*/
+/*    bottom: 20px; !* 20px de margine jos *!*/
+/*    padding: 10px 20px;*/
+/*    font-size: 16px;*/
+/*    color: white;*/
+/*    background-color: #007bff;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+.transaction-add-button-div{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    padding: 10px 20px;
+    /*width: 100%;*/
+    /*height: 100%;*/
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    /*background-color: #1a1a1a;*/
+    &:after{
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 0; right: 0; bottom: 0; left: 0;
+        /*background: #1a1a1a;*/
+    }
+}
+.transaction-add-button {
+    position: relative;
+    z-index: 1;
+    width: 80px;
+    height: 80px;
+    /*color: #1a1a1a;*/
+    background: #41B06E;
+    border-radius: 50%;
+    border: none;
+    transition: box-shadow 400ms cubic-bezier(.2,0,.7,1), transform 200ms cubic-bezier(.2,0,.7,1);
+    &:after{
+        content: "+";
+        font-size: 2.5em;
+        line-height: 1.1em;
+    }
+    &:hover{
+        transform: rotate(45deg);
+        box-shadow: 0 0 1px 5px #8DECB4,
+        0 0 1px 10px #8DECB4,
+        0 0 1px 25px #8DECB4;
+    }
+}
+
+
