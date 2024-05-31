@@ -1,0 +1,46 @@
+.transaction-modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.transaction-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 30%;
+    height: 30%;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.transaction-modal-close {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.transaction-modal-input-box {
+    display: flex;
+    flex-grow: 1;
+    gap: 2rem;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.transaction-modal-column {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+}
+
+.transaction-modal-input {
+
+}
