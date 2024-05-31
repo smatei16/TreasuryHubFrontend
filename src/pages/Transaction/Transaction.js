@@ -26,7 +26,7 @@ function TransactionCard({ transaction, categories, accounts, onEdit, onDelete }
                     </div>
                     <div className="transaction-column">
                         {transaction.transactionCategoryId !== null &&
-                            <span className="transaction-value">{transaction.type}</span>}
+                            <span className="transaction-value">{transaction.name}</span>}
                         {transaction.type !== "TRANSFER" &&
                             <span className="transaction-value">{transaction.sourceAccountBankName}</span>}
                         {transaction.type === "TRANSFER" &&
@@ -73,6 +73,7 @@ async function fetchCreate(newTransaction) {
     const data =  {transactionCategoryId: newTransaction.transactionCategoryId, amount: newTransaction.amount,
         sourceAccountId: newTransaction.sourceAccountId, destinationAccountId: newTransaction.destinationAccountId,
         merchant: newTransaction.merchant, details: newTransaction.details, date: newTransaction.date}
+    console.log(data);
     const response = await fetch(`${process.env.REACT_APP_PROD}/transaction/save`, {
         method: 'POST',
         headers: {
