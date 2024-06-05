@@ -6,21 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="96bbafe8-8f86-47d1-aa09-d592674527ce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Budget/Budget.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Budget/Budget.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Budget/BudgetModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Budget/BudgetModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Navbar/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Navbar/Navbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignIn/SignIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignIn/SignIn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignUp/SignUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignUp/SignUp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Transaction/Transaction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Transaction/Transaction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Transaction/TransactionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Transaction/TransactionModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Wallet/AccountModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Wallet/AccountModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Wallet/Wallet.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Wallet/Wallet.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +78,7 @@
       <workItem from="1716325773086" duration="556000" />
       <workItem from="1716326502314" duration="11599000" />
       <workItem from="1716496558857" duration="59173000" />
-      <workItem from="1717182498204" duration="90196000" />
+      <workItem from="1717182498204" duration="92724000" />
     </task>
     <servers />
   </component>
