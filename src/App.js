@@ -8,6 +8,9 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Wallet from "./pages/Wallet/Wallet";
 import Budget from "./pages/Budget/Budget";
 import Transaction from "./pages/Transaction/Transaction";
+import Homepage from "./pages/Homepage/Homepage";
+import AccountModal from "./pages/Wallet/AccountModal";
+import Test from "./pages/test";
 
 function App() {
   return (
@@ -31,12 +34,14 @@ function App() {
         {/*<Navbar></Navbar>*/}
         <div className="App">
           <Routes>
+              <Route path="" element={<Homepage/>}/>
               <Route path="/dashboard" element={<Dashboard />}></Route>
               <Route path="/register" element={<SignUp />} />
               <Route path="/login" element={<SignIn />} />
               <Route path="/wallet" element={<Wallet />}  />
               <Route path="/budgets" element={<Budget />}/>
               <Route path="/transactions" element={<Transaction />}/>
+              <Route path="/test" element={<Test />}/>
           </Routes>
         </div>
       </Router>
