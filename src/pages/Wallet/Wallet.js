@@ -50,7 +50,7 @@ function BankAccountCard({ account, onEdit, onDelete }) {
                     </p>
                 </div>
                 <div
-                    className="inline-flex items-center text-base font-semibold text-gray-900">
+                    className="flex-1 font-bold">
                     {account.balance}
                 </div>
             </div>

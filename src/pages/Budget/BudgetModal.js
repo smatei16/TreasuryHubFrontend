@@ -97,13 +97,13 @@ function BudgetModal({currentBudget, isOpen, onClose, onSave, onDelete}) {
                     <div className="flex gap-4 mb-4 justify-center">
                         <button type="submit"
                                 className="w-1/2 bg-color-1 hover:bg-orange-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            {currentBudget.id ? 'Save Changes' : 'Create Account'}
+                            {currentBudget.id ? 'Save Changes' : 'Create Category'}
                         </button>
                         {currentBudget.id &&
                             <button type="button"
                                     className="w-1/2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                     onClick={handleDelete}>
-                                'Delete Account'
+                                Delete Category
                             </button>}
                     </div>
                 </form>

@@ -111,7 +111,7 @@ function AccountModal({ account, isOpen, onClose, onSave, onDelete }) {
                             <button type="button"
                                 className="w-1/2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                 onClick={handleDelete}>
-                            'Delete Account'
+                            Delete Account
                         </button>}
                     </div>
                 </form>

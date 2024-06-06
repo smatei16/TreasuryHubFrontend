@@ -55,18 +55,30 @@ function TransactionCard({ transaction, onEdit, onDelete }) {
                     {transaction.type === 'EXPENSE' && <TbCategoryMinus className="w-8 h-8 rounded-full"/>}
                     {transaction.type === 'TRANSFER' && <TbCategory2 className="w-8 h-8 rounded-full"/>}
                 </div>
-                <div className="flex-1 flex flex-row justify-center content-center items-center min-w-0 ms-4">
-                    <p className="font-semibold truncate mr-1">
-                        {transaction.sourceAccountBankName}
-                    </p>
-                    {transaction.type === 'TRANSFER' && <FaArrowCircleRight />}
-                    {transaction.type === 'TRANSFER' && <p className="font-semibold truncate ml-1">
-                        {transaction.destinationAccountBankName}
-                    </p>}
+                {/*<div className="flex-1 min-w-0 ms-4">*/}
+                {/*    <p className="text-md font-medium truncate">*/}
+                {/*        {transaction.name}*/}
+                {/*    </p>*/}
+                {/*</div>*/}
+                <div className="flex-1 min-w-0 ms-4">
+                    <div>
+                        <p className="font-bold truncate mr-1">
+                            {transaction.name}
+                        </p>
+                    </div>
+                    <div className="flex flex-row justify-center content-center items-center">
+                        <p className="font-semibold truncate mr-1">
+                            {transaction.sourceAccountBankName}
+                        </p>
+                        {transaction.type === 'TRANSFER' && <FaArrowCircleRight/>}
+                        {transaction.type === 'TRANSFER' && <p className="font-semibold truncate ml-1">
+                            {transaction.destinationAccountBankName}
+                        </p>}
+                    </div>
                 </div>
                 <div className="flex-1 min-w-0 ms-4">
                     <p className="text-md font-medium truncate">
-                    {transaction.amount}
+                        {transaction.amount}
                     </p>
                     <p className="text-md font-medium truncate">
                         {transaction.merchant}
@@ -146,6 +158,7 @@ async function fetchDetailedTransactionId(id) {
 
 function Transaction() {
     const [transactions, setTransactions] = useState([]);
+    const [groupedTransactions, setGroupedTransactions] = useState({});
     const [currentTransaction, setCurrentTransaction] = useState(null);
     const [categories, setCategories] = useState([]);
     const [accounts, setAccounts] = useState([]);
@@ -162,10 +175,6 @@ function Transaction() {
             });
             const data = await response.json();
             setCategories(data);
-            // setCategories(data.reduce((acc, item) => {
-            //     acc[item.id] = item.name;
-            //     return acc;
-            // }, {}));
         };
 
         const fetchAccounts = async () => {
@@ -179,10 +188,6 @@ function Transaction() {
             });
             const data = await response.json();
             setAccounts(data);
-            // setAccounts(data.reduce((acc, item) => {
-            //     acc[item.id] = item.bankName;
-            //     return acc;
-            // }, {}));
         };
 
         const fetchTransactions = async () => {
@@ -203,16 +208,28 @@ function Transaction() {
         fetchTransactions();
     }, []);
 
+    useEffect(() => {
+        const grouped = transactions.reduce((acc, transaction) => {
+            const date = transaction.date.split('T')[0];
+            if (!acc[date]) acc[date] = [];
+            acc[date].push(transaction);
+            return acc;
+        }, {});
+        setGroupedTransactions(grouped);
+    }, [transactions]);
+
     const handleTransactionUpdate = async (id, updatedTransaction ) => {
         try {
             if (id) {
                 const updated = await fetchUpdate(id, updatedTransaction);
                 const response = await fetchDetailedTransactionId(updated.id);
-                setTransactions(transactions.map(transaction => transaction.id === id ? { ...transaction, ...response } : transaction));
+                setTransactions(transactions
+                    .map(transaction => transaction.id === id ? { ...transaction, ...response } : transaction)
+                    .sort((transaction1, transaction2) => new Date(transaction1.date) > new Date(transaction2.date) ? -1 : 1));
             } else {
                 const newTransaction = await fetchCreate(updatedTransaction);
                 const response = await fetchDetailedTransactionId(newTransaction.id);
-                setTransactions([...transactions, response]);
+                setTransactions([...transactions, response].sort((transaction1, transaction2) => new Date(transaction1.date) > new Date(transaction2.date) ? -1 : 1));
             }
         } catch (error) {
             console.error('Error processing transaction update:', error);
@@ -239,13 +256,6 @@ function Transaction() {
         }
     };
 
-    const groupedTransactions = transactions.reduce((acc, transaction) => {
-        const date = transaction.date.split('T')[0];
-        if (!acc[date]) acc[date] = [];
-        acc[date].push(transaction);
-        return acc;
-    }, {});
-
     const openNewTransactionModal = () => {
         setCurrentTransaction({ transactionCategoryId: '', amount: '', sourceAccountId: '', destinationAccountId: '', merchant: '', details: '', date: '' });
     };
@@ -263,7 +273,7 @@ function Transaction() {
                             {/*<a href="#" className="text-sm font-medium text-blue-600 hover:underline">*/}
                             {/*    View all*/}
                             {/*</a>*/}
-                            {index === 0 &&<button className="font-roboto hover:font-bold" onClick={openNewTransactionModal}>+ Add
+                            {index === 0 && <button className="font-roboto hover:font-bold" onClick={openNewTransactionModal}>+ Add
                                 transaction
                             </button>}
                         </div>
