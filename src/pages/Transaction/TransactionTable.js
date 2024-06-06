@@ -3,12 +3,8 @@ import TransactionModal from './TransactionModal';
 import './Transaction.css';
 import Navbar from "../Navbar/Navbar";
 import ParticlesBackground from "../Homepage/ParticlesBackground";
-import {TbCategory, TbCategory2, TbCategoryMinus, TbCategoryPlus} from "react-icons/tb";
-import BudgetModal from "../Budget/BudgetModal";
-import {FaArrowDownLong} from "react-icons/fa6";
-import {FaArrowCircleRight} from "react-icons/fa";
 
-function TransactionCard({ transaction, onEdit, onDelete }) {
+function TransactionCard({ transaction, categories, accounts, onEdit, onDelete }) {
     // const categoryName = categories[transaction.transaction];
     // const accountName = accounts[transaction.accountId];
     const handleDeleteClick = (event) => {
@@ -48,44 +44,25 @@ function TransactionCard({ transaction, onEdit, onDelete }) {
         //         </div>
         //     </div>
         // </div>
-        <li className="py-3 sm:py-4 rounded-lg hover:bg-color-1" onClick={() => onEdit(transaction)}>
-            <div className="flex items-center">
-                <div className="flex-shrink-0">
-                    {transaction.type === 'INCOME' && <TbCategoryPlus className="w-8 h-8 rounded-full"/>}
-                    {transaction.type === 'EXPENSE' && <TbCategoryMinus className="w-8 h-8 rounded-full"/>}
-                    {transaction.type === 'TRANSFER' && <TbCategory2 className="w-8 h-8 rounded-full"/>}
-                </div>
-                {/*<div className="flex-1 min-w-0 ms-4">*/}
-                {/*    <p className="text-md font-medium truncate">*/}
-                {/*        {transaction.name}*/}
-                {/*    </p>*/}
-                {/*</div>*/}
-                <div className="flex-1 min-w-0 ms-4">
-                    <div>
-                        <p className="font-bold truncate mr-1">
-                            {transaction.name}
-                        </p>
-                    </div>
-                    <div className="flex flex-row justify-center content-center items-center">
-                        <p className="font-semibold truncate mr-1">
-                            {transaction.sourceAccountBankName}
-                        </p>
-                        {transaction.type === 'TRANSFER' && <FaArrowCircleRight/>}
-                        {transaction.type === 'TRANSFER' && <p className="font-semibold truncate ml-1">
-                            {transaction.destinationAccountBankName}
-                        </p>}
-                    </div>
-                </div>
-                <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-md font-medium truncate">
-                        {transaction.amount}
-                    </p>
-                    <p className="text-md font-medium truncate">
-                        {transaction.merchant}
-                    </p>
-                </div>
-            </div>
-        </li>
+        <tr className="border-b hover:bg-color-1">
+            <th scope="row"
+                className="px-6 py-4 font-medium whitespace-nowrap">
+                Apple MacBook Pro 17"
+            </th>
+            <td className="px-6 py-4">
+                Silver
+            </td>
+            <td className="px-6 py-4">
+                Laptop
+            </td>
+            <td className="px-6 py-4">
+                $2999
+            </td>
+            {/*<td className="px-6 py-4">*/}
+            {/*    <a href="#"*/}
+            {/*       className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>*/}
+            {/*</td>*/}
+        </tr>
     );
 }
 
@@ -156,9 +133,8 @@ async function fetchDetailedTransactionId(id) {
 }
 
 
-function Transaction() {
+function Transaction2() {
     const [transactions, setTransactions] = useState([]);
-    const [groupedTransactions, setGroupedTransactions] = useState({});
     const [currentTransaction, setCurrentTransaction] = useState(null);
     const [categories, setCategories] = useState([]);
     const [accounts, setAccounts] = useState([]);
@@ -175,6 +151,10 @@ function Transaction() {
             });
             const data = await response.json();
             setCategories(data);
+            // setCategories(data.reduce((acc, item) => {
+            //     acc[item.id] = item.name;
+            //     return acc;
+            // }, {}));
         };
 
         const fetchAccounts = async () => {
@@ -188,6 +168,10 @@ function Transaction() {
             });
             const data = await response.json();
             setAccounts(data);
+            // setAccounts(data.reduce((acc, item) => {
+            //     acc[item.id] = item.bankName;
+            //     return acc;
+            // }, {}));
         };
 
         const fetchTransactions = async () => {
@@ -208,28 +192,16 @@ function Transaction() {
         fetchTransactions();
     }, []);
 
-    useEffect(() => {
-        const grouped = transactions.reduce((acc, transaction) => {
-            const date = transaction.date.split('T')[0];
-            if (!acc[date]) acc[date] = [];
-            acc[date].push(transaction);
-            return acc;
-        }, {});
-        setGroupedTransactions(grouped);
-    }, [transactions]);
-
     const handleTransactionUpdate = async (id, updatedTransaction ) => {
         try {
             if (id) {
                 const updated = await fetchUpdate(id, updatedTransaction);
                 const response = await fetchDetailedTransactionId(updated.id);
-                setTransactions(transactions
-                    .map(transaction => transaction.id === id ? { ...transaction, ...response } : transaction)
-                    .sort((transaction1, transaction2) => new Date(transaction1.date) > new Date(transaction2.date) ? -1 : 1));
+                setTransactions(transactions.map(transaction => transaction.id === id ? { ...transaction, ...response } : transaction));
             } else {
                 const newTransaction = await fetchCreate(updatedTransaction);
                 const response = await fetchDetailedTransactionId(newTransaction.id);
-                setTransactions([...transactions, response].sort((transaction1, transaction2) => new Date(transaction1.date) > new Date(transaction2.date) ? -1 : 1));
+                setTransactions([...transactions, response]);
             }
         } catch (error) {
             console.error('Error processing transaction update:', error);
@@ -256,6 +228,13 @@ function Transaction() {
         }
     };
 
+    const groupedTransactions = transactions.reduce((acc, transaction) => {
+        const date = transaction.date.split('T')[0];
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(transaction);
+        return acc;
+    }, {});
+
     const openNewTransactionModal = () => {
         setCurrentTransaction({ transactionCategoryId: '', amount: '', sourceAccountId: '', destinationAccountId: '', merchant: '', details: '', date: '' });
     };
@@ -265,58 +244,72 @@ function Transaction() {
             <ParticlesBackground/>
             <Navbar/>
             <div
-                className="flex-grow flex flex-col items-center justify-center px-6 py-8 mx-auto max-h-screen-xl w-full bg-color-1 gap-4">
-                {!currentTransaction && Object.entries(groupedTransactions).map(([date, transactions], index) => (
-                    <div className="w-full max-w-screen-sm p-4 bg-white border rounded-lg shadow z-10">
-                        <div className="flex items-center justify-between">
-                            <h5 className="text-xl font-bold font-roboto leading-none text-gray-900">{date}</h5>
-                            {/*<a href="#" className="text-sm font-medium text-blue-600 hover:underline">*/}
-                            {/*    View all*/}
-                            {/*</a>*/}
-                            {index === 0 && <button className="font-roboto hover:font-bold" onClick={openNewTransactionModal}>+ Add
-                                transaction
-                            </button>}
-                        </div>
-                        <div className="flow-root">
-                            <ul role="list" className="divide-y">
-                                {/*<li className="py-3 sm:py-4 rounded-lg">*/}
-                                {/*    <div className="flex items-center">*/}
-                                {/*        <div className="flex-shrink-0">*/}
-                                {/*            <TbCategory className="w-8 h-8 rounded-full"/>*/}
-                                {/*        </div>*/}
-                                {/*        <div className="flex-1 min-w-0 ms-4">*/}
-                                {/*            <p className="font-bold font-roboto text-xl truncate">*/}
-                                {/*                Category*/}
-                                {/*            </p>*/}
-                                {/*        </div>*/}
-                                {/*        <div className="flex-1 min-w-0 ms-4">*/}
-                                {/*            <p className="font-bold font-roboto text-xl truncate">*/}
-                                {/*                Budget*/}
-                                {/*            </p>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*</li>*/}
-                                {transactions.map(transaction => (
-                                    <TransactionCard key={transaction.id} transaction={transaction}
-                                                     onEdit={setCurrentTransaction}
-                                                     onDelete={handleDeleteTransaction}/>
-                                ))}
-                                {transactions.length === 0 &&
-                                    <p className="truncate font-roboto">No categories added</p>}
-                            </ul>
-                        </div>
-                    </div>
-                ))
-                }
-                <TransactionModal
-                    currentTransaction={currentTransaction}
-                    categories={categories}
-                    accounts={accounts}
-                    isOpen={!!currentTransaction}
-                    onClose={() => setCurrentTransaction(null)}
-                    onSave={handleTransactionUpdate}
-                    onDelete={handleDeleteTransaction}
-                />
+                className="flex-grow flex flex-col items-center justify-center px-6 py-8 mx-auto max-h-screen-xl max-w-screen-xl w-full bg-color-1">
+                <div className="overflow-x-auto shadow-md sm:rounded-lg w-full z-10 bg-white">
+                    <table className="w-full text-md text-left rtl:text-right">
+                        <thead
+                            className="text-lg font-roboto uppercase">
+                        <tr>
+                            <th scope="col" className="px-6 py-3">
+                                Product name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Color
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Category
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Price
+                            </th>
+                            {/*<th scope="col" className="px-6 py-3">*/}
+                            {/*    Action*/}
+                            {/*</th>*/}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <TransactionCard/>
+                        <TransactionCard/>
+                        </tbody>
+                    </table>
+                    <nav className="flex items-center flex-column flex-wrap md:flex-row justify-between p-6"
+                         aria-label="Table navigation">
+                        <span
+                            className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span
+                            className="font-semibold text-gray-900 dark:text-white">1-10</span> of <span
+                            className="font-semibold text-gray-900 dark:text-white">1000</span></span>
+                        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                            <li>
+                                <a href="#"
+                                   className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                            </li>
+                            <li>
+                                <a href="#" aria-current="page"
+                                   className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
 
@@ -354,4 +347,4 @@ function Transaction() {
     );
 }
 
-export default Transaction;
+export default Transaction2;
