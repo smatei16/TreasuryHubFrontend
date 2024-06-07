@@ -7,6 +7,7 @@ import {TbCategory, TbCategory2, TbCategoryMinus, TbCategoryPlus} from "react-ic
 import BudgetModal from "../Budget/BudgetModal";
 import {FaArrowDownLong} from "react-icons/fa6";
 import {FaArrowCircleRight} from "react-icons/fa";
+import {MdOutlineDocumentScanner} from "react-icons/md";
 
 function TransactionCard({ transaction, onEdit, onDelete }) {
     // const categoryName = categories[transaction.transaction];
@@ -264,18 +265,44 @@ function Transaction() {
         <div className="w-full h-screen bg-color-1 flex flex-col">
             <ParticlesBackground/>
             <Navbar/>
+            <div className="flex flex-col items-center w-full pt-8">
+                <div className="max-w-screen-sm items-center w-full">
+                    {/*<input className="border border-color-1 text-lf font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full"*/}
+                    {/*        onClick={openNewTransactionModal}><MdOutlineDocumentScanner className="inline-block"/> Scan receipt*/}
+                    {/*</input>*/}
+                    <div className="flex flex-row items-center w-full">
+                        <span className="w-full font-roboto text-lg font-bold"><MdOutlineDocumentScanner className="inline-block"/>Scan Receipt</span>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            // onChange={handleImageChange}
+                            className="w-full text-lg
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-color-3 file:text-color-4
+                            hover:file:bg-orange-200"
+                        />
+                    </div>
+                    <button
+                        className="border border-color-1 text-lg font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full"
+                        onClick={openNewTransactionModal}>+ Add transaction
+                    </button>
+                </div>
+            </div>
             <div
-                className="flex-grow flex flex-col items-center justify-center px-6 py-8 mx-auto max-h-screen-xl w-full bg-color-1 gap-4">
+                className="flex-grow flex flex-col items-center justify-center px-6 mx-auto max-h-screen-xl w-full bg-color-1 gap-4">
                 {!currentTransaction && Object.entries(groupedTransactions).map(([date, transactions], index) => (
                     <div className="w-full max-w-screen-sm p-4 bg-white border rounded-lg shadow z-10">
                         <div className="flex items-center justify-between">
-                            <h5 className="text-xl font-bold font-roboto leading-none text-gray-900">{date}</h5>
+                        <h5 className="text-xl font-bold font-roboto leading-none text-gray-900">{date}</h5>
                             {/*<a href="#" className="text-sm font-medium text-blue-600 hover:underline">*/}
                             {/*    View all*/}
                             {/*</a>*/}
-                            {index === 0 && <button className="font-roboto hover:font-bold" onClick={openNewTransactionModal}>+ Add
-                                transaction
-                            </button>}
+                            {/*{index === 0 && <button className="font-roboto hover:font-bold" onClick={openNewTransactionModal}>+ Add*/}
+                            {/*    transaction*/}
+                            {/*</button>}*/}
                         </div>
                         <div className="flow-root">
                             <ul role="list" className="divide-y">
