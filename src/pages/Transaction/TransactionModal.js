@@ -179,7 +179,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                                 </div>
                                 <div className="flex justify-center">
                                     <button type="button"
-                                            className="border border-color-4 text-sm font-roboto rounded-lg block p-2.5 bg-color-1 hover:bg-orange-200 "
+                                            className="border border-color-4 text-sm font-roboto rounded-lg block p-2.5 bg-color-1 hover:bg-orange-200"
                                             onClick={() => handleAddTransactionItem(index)}>
                                         Add category
                                     </button>
