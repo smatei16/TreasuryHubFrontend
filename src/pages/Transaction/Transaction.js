@@ -275,7 +275,7 @@ function Transaction() {
                         <input
                             type="file"
                             accept="image/*"
-                            capture="environment"
+                            // capture="environment"
                             // onChange={handleImageChange}
                             className="w-full text-lg
                             file:mr-4 file:py-2 file:px-4
