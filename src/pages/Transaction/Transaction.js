@@ -99,7 +99,8 @@ async function fetchUpdate(id, updatedTransaction) {
         destinationAccountId: updatedTransaction.destinationAccountId,
         merchant: updatedTransaction.merchant,
         details: updatedTransaction.details,
-        date: updatedTransaction.date
+        date: updatedTransaction.date,
+        url: updatedTransaction.imageUrl
     }
     const response = await fetch(`${process.env.REACT_APP_PROD}/transaction/${id}`, {
         method: 'PUT',
@@ -122,7 +123,8 @@ async function fetchCreate(newTransaction) {
     const data = {
         transactionCategoryId: newTransaction.transactionCategoryId, amount: newTransaction.amount,
         sourceAccountId: newTransaction.sourceAccountId, destinationAccountId: newTransaction.destinationAccountId,
-        merchant: newTransaction.merchant, details: newTransaction.details, date: newTransaction.date}
+        merchant: newTransaction.merchant, details: newTransaction.details, date: newTransaction.date,
+        url: newTransaction.imageUrl}
     console.log(data);
     const response = await fetch(`${process.env.REACT_APP_PROD}/transaction/save`, {
         method: 'POST',
@@ -258,14 +260,14 @@ function Transaction() {
     };
 
     const openNewTransactionModal = () => {
-        setCurrentTransaction({ transactionCategoryId: '', amount: '', sourceAccountId: '', destinationAccountId: '', merchant: '', details: '', date: '' });
+        setCurrentTransaction({ transactionCategoryId: '', amount: '', sourceAccountId: '', destinationAccountId: '', merchant: '', details: '', date: '', url: '' });
     };
 
     return (
         <div className="w-full h-screen bg-color-1 flex flex-col">
             <ParticlesBackground/>
             <Navbar/>
-            <div className="flex flex-col items-center w-full pt-8">
+            {!currentTransaction && <div className="flex flex-col items-center w-full pt-8">
                 <div className="max-w-screen-sm items-center w-full">
                     {/*<input className="border border-color-1 text-lf font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full"*/}
                     {/*        onClick={openNewTransactionModal}><MdOutlineDocumentScanner className="inline-block"/> Scan receipt*/}
@@ -290,7 +292,7 @@ function Transaction() {
                         onClick={openNewTransactionModal}>+ Add transaction
                     </button>
                 </div>
-            </div>
+            </div>}
             <div
                 className="flex-grow flex flex-col items-center justify-center px-6 mx-auto max-h-screen-xl w-full bg-color-1 gap-4">
                 {!currentTransaction && Object.entries(groupedTransactions).map(([date, transactions], index) => (

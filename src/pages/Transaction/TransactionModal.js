@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './TransactionModal.css';
+import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
+import {storage} from "../../firebase";
+import {v4} from 'uuid';
 
 function TransactionModal({ currentTransaction, categories, accounts, isOpen, onClose, onSave, onDelete }) {
     const [transactionType, setTransactionType] = useState('INCOME');
@@ -10,9 +13,11 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
     const [merchant, setMerchant] = useState('');
     const [details, setDetails] = useState('');
     const [date, setDate] = useState('');
+    const [url, setUrl] = useState('');
     const [error, setError] = useState('');
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [transactionItems, setTransactionItems] = useState([{categoryId: '', amount: ''}]);
+    const [file, setFile] = useState(null);
 
     useEffect(() => {
         setFilteredCategories(categories.filter(category => category.transactionType === transactionType))
@@ -28,6 +33,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
             setMerchant(currentTransaction.merchant || '');
             setDetails(currentTransaction.details || '');
             setDate(currentTransaction.date || '');
+            setUrl(currentTransaction.url || '');
             setTransactionItems([{categoryId: currentTransaction.transactionCategoryId || '', amount: currentTransaction.amount || ''}]);
             setError('');
         }
@@ -63,15 +69,20 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
 
         else {
             try {
+                let imageUrl = '';
+                if(file) {
+                    imageUrl = await handleImageUpload(file);
+                    console.log(imageUrl);
+                }
                 const sourceAccountId = selectedSourceAccountId;
                 const destinationAccountId = selectedDestinationAccountId;
                 if(transactionType === 'TRANSFER') {
-                    await onSave(currentTransaction.id, {sourceAccountId, destinationAccountId, amount, details, date});
+                    await onSave(currentTransaction.id, {sourceAccountId, destinationAccountId, amount, details, date, imageUrl});
                 } else {
                     for (const item of transactionItems) {
                         const transactionCategoryId = item.categoryId;
                         const amount = item.amount;
-                        await onSave(currentTransaction.id, {transactionCategoryId, sourceAccountId, amount, merchant, details, date});
+                        await onSave(currentTransaction.id, {transactionCategoryId, sourceAccountId, amount, merchant, details, date, imageUrl});
                     }
                 }
                 onClose();
@@ -80,6 +91,30 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
             }
         }
     };
+
+    const handleImageUpload = async (file) => {
+        return new Promise((resolve, reject) => {
+            const storageRef = ref(storage, v4());
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    const progress =
+                        Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    // setProgressPercent(progress);
+                },
+                (error) => {
+                    reject(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        resolve(downloadURL);
+                        console.log(url);
+                    });
+                }
+            );
+        });
+    }
 
     const handleDelete = async (event) => {
         event.preventDefault();
@@ -104,8 +139,12 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
     };
     const gridClass = `grid ${getGridClass(transactionItems.length)} gap-4`;
 
+    const handleImageChange = (event) => {
+        setFile(event.target.files[0]);
+    }
+
     return (
-        <div className="w-full rounded-lg shadow max-w-2xl bg-color-3 z-10">
+        <div className="w-full rounded-lg shadow max-w-2xl bg-color-3 z-10 m-4">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
                     <h1 className="text-xl font-roboto font-bold">
@@ -221,11 +260,12 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                             />
                         </div>}
                         {transactionType === 'TRANSFER' && <div>
-                                    <label className="block mb-2 text-sm font-medium font-roboto text-gray-900">Amount</label>
-                                    <input type="number"
-                                           className="border border-color-4 text-sm font-roboto rounded-lg block w-full p-2.5" value={amount}
-                                           placeholder="Enter amount"
-                                           onChange={e => setAmount(e.target.value)}/>
+                            <label className="block mb-2 text-sm font-medium font-roboto text-gray-900">Amount</label>
+                            <input type="number"
+                                   className="border border-color-4 text-sm font-roboto rounded-lg block w-full p-2.5"
+                                   value={amount}
+                                   placeholder="Enter amount"
+                                   onChange={e => setAmount(e.target.value)}/>
                         </div>
                         }
                         <div>
@@ -234,6 +274,25 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                                    className="border border-color-4 text-sm font-roboto rounded-lg block w-full p-2.5"
                                    placeholder="Enter transaction details" value={details}
                                    onChange={e => setDetails(e.target.value)}
+                            />
+                        </div>
+                        {url && <div className="flex flex-col content-center items-center">
+                            {/*<label className="block mb-2 text-sm font-medium font-roboto text-gray-900">Details</label>*/}
+                            <img className="h-auto w-full rounded-lg" src={url}
+                                 alt="image description"/>
+                        </div>}
+                        <div>
+                            <label className="block mb-2 text-sm font-medium font-roboto text-gray-900">Add
+                                image</label>
+                            <input type="file"
+                                   accept="image/*"
+                                   className="w-full text-lg
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-white file:text-color-4
+                                    hover:file:bg-orange-200"
+                                   onChange={handleImageChange}
                             />
                         </div>
                     </div>

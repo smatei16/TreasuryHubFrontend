@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import {storage} from "../firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 function Test() {
     const [file, setFile] = useState(null);
     const [response, setResponse] = useState(null);
+    const [progressPercent, setProgressPercent] = useState('');
+    const [imgUrl, setImgUrl] = useState('');
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -11,10 +15,30 @@ function Test() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        const storageRef = ref(storage, 'test');
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
         if (!file) {
             alert("Please select a file first!");
             return;
         }
+
+        uploadTask.on("state_changed",
+            (snapshot) => {
+                const progress =
+                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgressPercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImgUrl(downloadURL)
+                    console.log(imgUrl);
+                });
+            }
+        );
 
         const reader = new FileReader();
         reader.onloadend = async () => {
@@ -89,6 +113,8 @@ function Test() {
                     <pre>{JSON.stringify(response, null, 2)}</pre>
                 </div>}
             </header>
+            <p>{progressPercent}</p>
+            <p>{imgUrl}</p>
         </div>
     );
 }
