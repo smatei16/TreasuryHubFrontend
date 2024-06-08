@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './TransactionModal.css';
-import {handleImageUpload} from "./TransactionUtils";
+import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
+import {storage} from "../../firebase";
+import {v4} from 'uuid';
+import {generateReceiptInfo, handleImageUpload} from "./TransactionUtils";
 
-function TransactionModal({ currentTransaction, categories, accounts, isOpen, onClose, onSave, onDelete }) {
-    const [transactionType, setTransactionType] = useState('INCOME');
-    // const [selectedCategoryId, setSelectedCategoryId] = useState('');
+function ReceiptModal({ currentReceipt, categories, accounts, isOpen, onClose, onSave}) {
+    const [transactionType, setTransactionType] = useState('EXPENSE');
     const [selectedSourceAccountId, setSelectedSourceAccountId] = useState('');
     const [selectedDestinationAccountId, setSelectedDestinationAccountId] = useState('');
     const [amount, setAmount] = useState('');
@@ -14,7 +16,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
     const [url, setUrl] = useState('');
     const [error, setError] = useState('');
     const [filteredCategories, setFilteredCategories] = useState([]);
-    const [transactionItems, setTransactionItems] = useState([{categoryId: '', amount: ''}]);
+    const [transactionItems, setTransactionItems] = useState([{id: '', amount: ''}]);
     const [file, setFile] = useState(null);
 
     useEffect(() => {
@@ -22,23 +24,20 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
     }, [categories, transactionType]);
 
     useEffect(() => {
-        if(isOpen && currentTransaction) {
-            setTransactionType(currentTransaction.type || '');
-            // setSelectedCategoryId(currentTransaction.transactionCategoryId || '');
-            setSelectedSourceAccountId(currentTransaction.sourceAccountId  || '');
-            setSelectedDestinationAccountId(currentTransaction.destinationAccountId || '');
-            setAmount(currentTransaction.amount || '');
-            setMerchant(currentTransaction.merchant || '');
-            setDetails(currentTransaction.details || '');
-            setDate(currentTransaction.date || '');
-            setUrl(currentTransaction.url || '');
-            setTransactionItems([{categoryId: currentTransaction.transactionCategoryId || '', amount: currentTransaction.amount || ''}]);
+        if(isOpen && currentReceipt) {
+            setMerchant(currentReceipt.merchant || '');
+            setDate(currentReceipt.date || '');
+            setUrl(currentReceipt.url || '');
+            setTransactionItems(currentReceipt.categories);
             setError('');
+            setSelectedSourceAccountId('');
+            setSelectedDestinationAccountId('');
+            setDetails('');
         }
-    }, [isOpen, currentTransaction]);
+    }, [isOpen, currentReceipt]);
 
     const handleAddTransactionItem = ()  => {
-        setTransactionItems([...transactionItems,  {categoryId: '', amount: ''}]);
+        setTransactionItems([...transactionItems,  {id: '', amount: ''}]);
     }
 
     const handleRemoveTransactionItem = (index) => {
@@ -47,7 +46,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
 
     const handleCategoryChange = (index, value) => {
         const updatedItems = [...transactionItems];
-        updatedItems[index].categoryId = value;
+        updatedItems[index].id = value;
         setTransactionItems(updatedItems);
     };
 
@@ -61,7 +60,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
         event.preventDefault();
         console.log(transactionItems);
         if(!transactionType || transactionType === 'Select a transaction type') setError('You must select a transaction type');
-        else if((transactionType === 'INCOME' || transactionType === 'EXPENSE') && (transactionItems.length === 0 || (transactionItems.length === 1 && !transactionItems[0].categoryId)))  setError('You must select a category');
+        else if((transactionType === 'INCOME' || transactionType === 'EXPENSE') && (transactionItems.length === 0 || (transactionItems.length === 1 && !transactionItems[0].id)))  setError('You must select a category');
         else if((transactionType === 'INCOME' || transactionType === 'EXPENSE') && (!selectedSourceAccountId || selectedSourceAccountId === 'Select an account'))  setError('You must select an account');
         else if(transactionType === 'TRANSFER' && (!selectedSourceAccountId || selectedSourceAccountId === 'Select an account' || !selectedDestinationAccountId || selectedDestinationAccountId === 'Select an account')) setError('You must select an account');
 
@@ -71,16 +70,18 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                 if(file) {
                     imageUrl = await handleImageUpload(file);
                     console.log(imageUrl);
+                } else {
+                    imageUrl = currentReceipt.url;
                 }
                 const sourceAccountId = selectedSourceAccountId;
                 const destinationAccountId = selectedDestinationAccountId;
                 if(transactionType === 'TRANSFER') {
-                    await onSave(currentTransaction.id, {sourceAccountId, destinationAccountId, amount, details, date, imageUrl});
+                    await onSave('', {sourceAccountId, destinationAccountId, amount, details, date, imageUrl});
                 } else {
                     for (const item of transactionItems) {
-                        const transactionCategoryId = item.categoryId;
+                        const transactionCategoryId = item.id;
                         const amount = item.amount;
-                        await onSave(currentTransaction.id, {transactionCategoryId, sourceAccountId, amount, merchant, details, date, imageUrl});
+                        await onSave('', {transactionCategoryId, sourceAccountId, amount, merchant, details, date, imageUrl});
                     }
                 }
                 onClose();
@@ -89,16 +90,6 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
             }
         }
     };
-
-    const handleDelete = async (event) => {
-        event.preventDefault();
-        try {
-            await onDelete(currentTransaction.id);
-            onClose();
-        } catch (error) {
-            setError("Error");
-        }
-    }
 
     if(!isOpen) return null;
 
@@ -118,11 +109,11 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
     }
 
     return (
-        <div className="w-full rounded-lg shadow max-w-2xl bg-color-3 z-10 m-4">
+        <div className="w-full rounded-lg shadow max-w-2xl bg-color-3 z-20 m-4">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
                     <h1 className="text-xl font-roboto font-bold">
-                        {currentTransaction.id ? 'Edit transaction' : 'Create a transaction'}
+                        Create a transaction
                     </h1>
                     <button type="button"
                             className="text-gray-400 bg-transparent rounded-lg text-lg p-1.5 ml-auto inline-flex items-center"
@@ -161,7 +152,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                                             Category</label>
                                         <select
                                             className="border border-color-4 text-sm font-roboto rounded-lg block w-full p-2.5"
-                                            value={item.categoryId}
+                                            value={item.id}
                                             onChange={e => handleCategoryChange(index, e.target.value)}>
                                             <option selected="">Select a category</option>
                                             {filteredCategories.map(category => (
@@ -197,7 +188,6 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                                         Add category
                                     </button>
                                 </div>
-
                             </div>
 
                         ))}
@@ -279,153 +269,13 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                     <div className="flex gap-4 mb-4 justify-center">
                         <button type="submit"
                                 className="w-1/2 bg-color-1 hover:bg-orange-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            {currentTransaction.id ? 'Save Changes' : 'Create Transaction'}
+                            Create Transaction
                         </button>
-                        {currentTransaction.id &&
-                            <button type="button"
-                                    className="w-1/2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                    onClick={handleDelete}>
-                                Delete Transaction
-                            </button>}
                     </div>
                 </form>
             </div>
         </div>
-
-
-        // <div className="transaction-modal">
-        //      <div className="transaction-modal-content">
-        //          <span className="transaction-modal-close" onClick={onClose}>&times;</span>
-        //          <h2>{currentTransaction.id ? 'Edit Transaction' : 'Add New Transaction'}</h2>
-        //          <form onSubmit={handleSubmit}>
-        //
-        //              <div className="transaction-modal-input-box">
-        //                  <label className="transaction-modal-label">Type</label>
-        //                  <select className="transaction-modal-select" value={transactionType}
-        //                          onChange={e => setTransactionType(e.target.value)}>
-        //                      {/*<option className="transaction-modal-option" value="Select a transaction type">Select a transaction type</option>*/}
-        //                      <option className="transaction-modal-option" value="INCOME">Income</option>
-        //                      <option className="transaction-modal-option" value="EXPENSE">Expense</option>
-        //                      <option className="transaction-modal-option" value="TRANSFER">Transfer</option>
-        //                  </select>
-        //              </div>
-        //
-        //              {transactionType !== 'TRANSFER' && transactionItems.map((item, index) => (
-        //                  <div key={index} className="transaction-modal-input-box">
-        //                      <label className="transaction-modal-label">Category</label>
-        //                      <select className="transaction-modal-select" value={item.categoryId}
-        //                              onChange={e => handleCategoryChange(index, e.target.value)}>
-        //                          <option className="transaction-modal-option" value="Select a category">Select a
-        //                              category
-        //                          </option>
-        //                          {filteredCategories.map(category => (
-        //                              <option className="transaction-modal-option"
-        //                                      key={category.id} value={category.id}>{category.name}</option>
-        //                          ))}
-        //                      </select>
-        //
-        //                      <label className="transaction-modal-label">Amount</label>
-        //                      <input className="transaction-modal-input" type="number" value={item.amount}
-        //                             onChange={e => handleAmountChange(index, e.target.value)}></input>
-        //
-        //                      {transactionItems.length > 1 && (
-        //                          <button type="button"
-        //                                  onClick={() => handleRemoveTransactionItem(index)}>Remove</button>
-        //                      )}
-        //                  </div>
-        //              ))}
-        //              {transactionType !== 'TRANSFER' && <div className="transaction-modal-input-box">
-        //                  <button type="button" onClick={handleAddTransactionItem}>Add another category</button>
-        //              </div>
-        //              }
-        //
-        //              {/*{*/}
-        //              {/*    transactionType !== 'TRANSFER' && (*/}
-        //              {/*        <div className="transaction-modal-input-box">*/}
-        //              {/*            <label className="transaction-modal-label">Category</label>*/}
-        //              {/*            <select className="transaction-modal-select" value={selectedCategoryId}*/}
-        //              {/*                    onChange={e => setSelectedCategoryId(e.target.value)}>*/}
-        //              {/*                <option className="transaction-modal-option" value="Select a category">Select a*/}
-        //              {/*                    category*/}
-        //              {/*                </option>*/}
-        //              {/*                {filteredCategories.map(category => (*/}
-        //              {/*                    <option className="transaction-modal-option"*/}
-        //              {/*                            key={category.id} value={category.id}>{category.name}</option>*/}
-        //              {/*                ))}*/}
-        //              {/*            </select>*/}
-        //              {/*        </div>*/}
-        //              {/*    )*/}
-        //              {/*}*/}
-        //              <div className="transaction-modal-input-box">
-        //                  <label className="transaction-modal-label">Source Account</label>
-        //                  <select className="transaction-modal-select" value={selectedSourceAccountId}
-        //                          onChange={e => setSelectedSourceAccountId(e.target.value)}>
-        //                      <option className="transaction-modal-option" value="Select an account">Select an account
-        //                      </option>
-        //                      {accounts.map(account => (
-        //                          <option className="transaction-modal-option"
-        //                                  key={account.id} value={account.id}>{account.bankName}</option>
-        //                      ))}
-        //                  </select>
-        //              </div>
-        //              {
-        //                  transactionType === 'TRANSFER' && (
-        //                      <div className="transaction-modal-input-box">
-        //                          <label className="transaction-modal-label">Destination Account</label>
-        //                          <select className="transaction-modal-select" value={selectedDestinationAccountId}
-        //                                  onChange={e => setSelectedDestinationAccountId(e.target.value)}>
-        //                              <option className="transaction-modal-option" value="Select an account">Select an
-        //                                  account
-        //                              </option>
-        //                              {accounts.map(account => (
-        //                                  <option className="transaction-modal-option"
-        //                                          key={account.id} value={account.id}>{account.bankName}</option>
-        //                              ))}
-        //                          </select>
-        //                      </div>
-        //                  )
-        //              }
-        //              {
-        //                  transactionType === 'TRANSFER' && (
-        //                      <div className="transaction-modal-input-box">
-        //                          <label className="transaction-modal-label">Amount</label>
-        //                          <input className="transaction-modal-input" type="number" value={amount}
-        //                                 onChange={e => setAmount(e.target.value)}/>
-        //                      </div>
-        //                  )
-        //              }
-        //              {
-        //                  transactionType === 'EXPENSE' && (
-        //                      <div className="transaction-modal-input-box">
-        //                          <label className="transaction-modal-label">Merchant</label>
-        //                          <input className="transaction-modal-input" type="text" value={merchant}
-        //                                 onChange={e => setMerchant(e.target.value)}/>
-        //                      </div>
-        //                  )
-        //              }
-        //              <div className="transaction-modal-input-box">
-        //                  <label className="transaction-modal-label">Details</label>
-        //                  <input className="transaction-modal-input" type="text" value={details}
-        //                         onChange={e => setDetails(e.target.value)}/>
-        //              </div>
-        //              <div className="transaction-modal-input-box">
-        //                  <label className="transaction-modal-label">Date</label>
-        //                  <input className="transaction-modal-input" type="datetime-local" value={date}
-        //                         onChange={e => setDate(e.target.value)} required/>
-        //              </div>
-        //              <div className="transaction-modal-input-box">
-        //                  <button className="transaction-modal-submit-button"
-        //                          type="submit">{currentTransaction.id ? 'Save Changes' : 'Create Transaction'}</button>
-        //              </div>
-        //              {
-        //                  error &&
-        //                  <div className="transaction-modal-input-box">
-        //                      <p className="transaction-modal-error">{error}</p>
-        //                  </div>}
-        //          </form>
-        //      </div>
-        // </div>
     )
 }
 
-export default TransactionModal;
+export default ReceiptModal;

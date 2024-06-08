@@ -27,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="TH-34" />
+        <entry key="$PROJECT_DIR$" value="TH-14" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,7 +49,7 @@
     "Node.js.SignUp.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "TH-14",
+    "git-widget-placeholder": "TH-25",
     "last_opened_file_path": "C:/PERSONAL/LICENTA/TreasuryHub/treasury-hub-frontend/src/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -83,7 +83,7 @@
       <workItem from="1716325773086" duration="556000" />
       <workItem from="1716326502314" duration="11599000" />
       <workItem from="1716496558857" duration="59173000" />
-      <workItem from="1717182498204" duration="115555000" />
+      <workItem from="1717182498204" duration="137100000" />
     </task>
     <servers />
   </component>

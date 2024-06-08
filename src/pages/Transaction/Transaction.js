@@ -8,6 +8,8 @@ import BudgetModal from "../Budget/BudgetModal";
 import {FaArrowDownLong} from "react-icons/fa6";
 import {FaArrowCircleRight} from "react-icons/fa";
 import {MdOutlineDocumentScanner} from "react-icons/md";
+import ReceiptModal from "./ReceiptModal";
+import {generateReceiptInfo, handleImageUpload} from "./TransactionUtils";
 
 function TransactionCard({ transaction, onEdit, onDelete }) {
     // const categoryName = categories[transaction.transaction];
@@ -17,38 +19,6 @@ function TransactionCard({ transaction, onEdit, onDelete }) {
         onDelete(transaction.id);
     }
     return (
-        // <div className="transaction-card" onClick={() => onEdit(transaction)}>
-        //     <h3 className="transaction-h3">{transaction.type}</h3>
-        //     <div className="transaction-details">
-        //         <div className="transaction-info">
-        //             <div className="transaction-column">
-        //                 {transaction.transactionCategoryId !== null &&
-        //                     <span className="transaction-label">Category</span>}
-        //                 {transaction.type !== "TRANSFER" && <span className="transaction-label">Account</span>}
-        //                 {transaction.type === "TRANSFER" && <span className="transaction-label">From</span>}
-        //                 {transaction.type === "TRANSFER" && <span className="transaction-label">To</span>}
-        //                 <span className="transaction-label">Amount</span>
-        //                 {transaction.type === "EXPENSE" && <span className="transaction-label">Merchant</span>}
-        //             </div>
-        //             <div className="transaction-column">
-        //                 {transaction.transactionCategoryId !== null &&
-        //                     <span className="transaction-value">{transaction.name}</span>}
-        //                 {transaction.type !== "TRANSFER" &&
-        //                     <span className="transaction-value">{transaction.sourceAccountBankName}</span>}
-        //                 {transaction.type === "TRANSFER" &&
-        //                     <span className="transaction-value">{transaction.sourceAccountBankName}</span>}
-        //                 {transaction.type === "TRANSFER" &&
-        //                     <span className="transaction-value">{transaction.destinationAccountBankName}</span>}
-        //                 <span className="transaction-value">{transaction.amount}</span>
-        //                 {transaction.type === "EXPENSE" && <span
-        //                     className="transaction-value">{transaction.merchant !== null ? transaction.merchant : 'Not set'}</span>}
-        //             </div>
-        //             <div className="transaction-column">
-        //                 <button className="transaction-delete-button" onClick={handleDeleteClick}>Delete</button>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
         <li className="py-3 sm:py-4 rounded-lg hover:bg-color-1" onClick={() => onEdit(transaction)}>
             <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -159,12 +129,17 @@ async function fetchDetailedTransactionId(id) {
 }
 
 
+
 function Transaction() {
     const [transactions, setTransactions] = useState([]);
     const [groupedTransactions, setGroupedTransactions] = useState({});
     const [currentTransaction, setCurrentTransaction] = useState(null);
     const [categories, setCategories] = useState([]);
     const [accounts, setAccounts] = useState([]);
+    const [receiptFile, setReceiptFile] = useState(null);
+    const [currentReceipt, setCurrentReceipt] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [generatingError, setGeneratingError] = useState('');
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -259,26 +234,62 @@ function Transaction() {
         }
     };
 
+    const handleReceiptImageChange = (event) => {
+        setReceiptFile(event.target.files[0]);
+    }
+
     const openNewTransactionModal = () => {
         setCurrentTransaction({ transactionCategoryId: '', amount: '', sourceAccountId: '', destinationAccountId: '', merchant: '', details: '', date: '', url: '' });
     };
+
+    const openNewReceiptModal = async () => {
+        setLoading(true);
+        try {
+            let imageUrl = '';
+            let receiptInfo = '';
+            const expenseCategories = categories
+                .filter(category => category.transactionType === 'EXPENSE')
+                .map(category => ({
+                    id: category.id,
+                    name: category.name,
+                }));
+            imageUrl = await handleImageUpload(receiptFile);
+            console.log(imageUrl);
+            receiptInfo = await generateReceiptInfo(imageUrl, expenseCategories);
+            console.log(receiptInfo);
+            console.log(receiptInfo.date);
+            console.log(receiptInfo.merchant);
+            console.log(receiptInfo.categories);
+            console.log(expenseCategories);
+            console.log(JSON.stringify(expenseCategories));
+            setCurrentReceipt({ date: receiptInfo.date, merchant: receiptInfo.merchant, url: imageUrl, categories: receiptInfo.categories});
+            console.log(currentReceipt);
+        } catch (error) {
+            console.error('Error generating transaction:', error);
+            setGeneratingError(error);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="w-full h-screen bg-color-1 flex flex-col">
             <ParticlesBackground/>
             <Navbar/>
-            {!currentTransaction && <div className="flex flex-col items-center w-full pt-8">
+            {!currentTransaction && !currentReceipt && <div className="flex flex-col items-center w-full pt-8">
                 <div className="max-w-screen-sm items-center w-full">
                     {/*<input className="border border-color-1 text-lf font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full"*/}
                     {/*        onClick={openNewTransactionModal}><MdOutlineDocumentScanner className="inline-block"/> Scan receipt*/}
                     {/*</input>*/}
                     <div className="flex flex-row items-center w-full">
-                        <span className="w-full font-roboto text-lg font-bold"><MdOutlineDocumentScanner className="inline-block"/>Scan Receipt</span>
+                        <span className="w-full font-roboto text-lg font-bold"><MdOutlineDocumentScanner
+                            className="inline-block"/>Scan Receipt</span>
                         <input
                             type="file"
                             accept="image/*"
                             // capture="environment"
-                            // onChange={handleImageChange}
+                            onChange={handleReceiptImageChange}
                             className="w-full text-lg
                             file:mr-4 file:py-2 file:px-4
                             file:rounded-full file:border-0
@@ -286,19 +297,36 @@ function Transaction() {
                             file:bg-color-3 file:text-color-4
                             hover:file:bg-orange-200"
                         />
+                        <button
+                            className="border border-color-1 text-lg font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full m-4"
+                            onClick={openNewReceiptModal}>Generate transaction
+                        </button>
+                        {loading && <div className="">
+                            <svg className="w-8 h-8 animate-spin text-white fill-color-3"
+                                 viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="currentColor"/>
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentFill"/>
+                            </svg>
+                            <span className="sr-only">Loading...</span>
+                        </div>}
                     </div>
                     <button
-                        className="border border-color-1 text-lg font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full"
+                        className="border border-color-1 text-lg font-bold font-roboto rounded-lg block p-2.5 bg-color-3 hover:bg-orange-200 w-full my-2"
                         onClick={openNewTransactionModal}>+ Add transaction
                     </button>
+                    {generatingError && <p className="m-2 font-bold font-roboto">{generatingError}</p>}
                 </div>
             </div>}
             <div
                 className="flex-grow flex flex-col items-center justify-center px-6 mx-auto max-h-screen-xl w-full bg-color-1 gap-4">
-                {!currentTransaction && Object.entries(groupedTransactions).map(([date, transactions], index) => (
+                {!currentTransaction && !currentReceipt && Object.entries(groupedTransactions).map(([date, transactions], index) => (
                     <div className="w-full max-w-screen-sm p-4 bg-white border rounded-lg shadow z-10">
                         <div className="flex items-center justify-between">
-                        <h5 className="text-xl font-bold font-roboto leading-none text-gray-900">{date}</h5>
+                            <h5 className="text-xl font-bold font-roboto leading-none text-gray-900">{date}</h5>
                             {/*<a href="#" className="text-sm font-medium text-blue-600 hover:underline">*/}
                             {/*    View all*/}
                             {/*</a>*/}
@@ -346,6 +374,14 @@ function Transaction() {
                     onSave={handleTransactionUpdate}
                     onDelete={handleDeleteTransaction}
                 />
+                <ReceiptModal
+                    currentReceipt={currentReceipt}
+                    categories={categories}
+                    accounts={accounts}
+                    isOpen={!!currentReceipt}
+                    onClose={()  => setCurrentReceipt(null)}
+                    onSave={handleTransactionUpdate}
+                    />
             </div>
         </div>
 
