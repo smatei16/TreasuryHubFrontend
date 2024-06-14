@@ -209,7 +209,7 @@ function TransactionModal({ currentTransaction, categories, accounts, isOpen, on
                                     onChange={e => setSelectedSourceAccountId(e.target.value)}>
                                 <option selected="">Select account</option>
                                 {accounts.map(account => (
-                                    <option value={account.id}>{account.bankName}</option>
+                                    <option value={account.id}>{account.bankName} - {account.currency}</option>
                                 ))}
                             </select>
                         </div>

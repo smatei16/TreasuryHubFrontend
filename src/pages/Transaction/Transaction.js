@@ -49,7 +49,7 @@ function TransactionCard({ transaction, onEdit, onDelete }) {
                 </div>
                 <div className="flex-1 min-w-0 ms-4">
                     <p className="text-md font-medium truncate">
-                        {transaction.amount}
+                        {transaction.amount} {transaction.sourceAccountCurrency}
                     </p>
                     <p className="text-md font-medium truncate">
                         {transaction.merchant}

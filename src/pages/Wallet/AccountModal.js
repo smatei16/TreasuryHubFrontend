@@ -3,20 +3,22 @@ import "./AccountModal.css";
 import ParticlesBackground from "../Homepage/ParticlesBackground";
 import Navbar from "../Navbar/Navbar";
 
-function AccountModal({ account, isOpen, onClose, onSave, onDelete }) {
+function AccountModal({ account, currencies, isOpen, onClose, onSave, onDelete }) {
 
     const [bankName, setBankName] = useState('');
     const [accountType, setAccountType] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
     const [balance, setBalance] = useState('');
+    const [currency, setCurrency] = useState('');
     const [error, setError] = useState('');
 
     useEffect(() => {
         if (isOpen && account) {
-            setBankName(account.bankName);
-            setAccountType(account.accountType);
-            setAccountNumber(account.accountNumber);
-            setBalance(account.balance);
+            setBankName(account.bankName || '');
+            setAccountType(account.accountType ||  '');
+            setAccountNumber(account.accountNumber || '');
+            setBalance(account.balance || '');
+            setCurrency(account.currency || '');
             setError('');
         }
     }, [isOpen, account]);
@@ -24,7 +26,7 @@ function AccountModal({ account, isOpen, onClose, onSave, onDelete }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await onSave(account.id, { bankName, accountType, accountNumber, balance });
+            await onSave(account.id, { bankName, accountType, accountNumber, balance, currency });
             onClose();
         } catch (error) {
             setError("Error");
@@ -94,6 +96,19 @@ function AccountModal({ account, isOpen, onClose, onSave, onDelete }) {
                                    placeholder="Enter account balance" value={balance}
                                    onChange={e => setBalance(e.target.value)}
                                    required/>
+                        </div>
+                        <div>
+                            <label className="block mb-2 text-sm font-medium font-roboto text-gray-900">Balance
+                            </label>
+                            <select
+                                className="border border-color-4 text-sm font-roboto rounded-lg block w-full p-2.5"
+                                value={currency}
+                                onChange={e => setCurrency(e.target.value)}>
+                                <option selected="">Select a currency</option>
+                                {currencies.map(x => (
+                                    <option value={x.currency_code}>{x.currency_code} - {x.currency_name}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                     <div className="flex justify-center">
