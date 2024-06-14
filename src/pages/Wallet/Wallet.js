@@ -51,7 +51,7 @@ function BankAccountCard({ account, onEdit, onDelete }) {
                 </div>
                 <div
                     className="flex-1 font-bold">
-                    {account.balance}
+                    {account.balance} {account.currency}
                 </div>
             </div>
         </li>
@@ -62,7 +62,8 @@ async function fetchUpdate(id, updatedAccount) {
     const token = localStorage.getItem('token');
     const data = {
         bankName: updatedAccount.bankName, accountType: updatedAccount.accountType,
-        accountNumber: updatedAccount.accountNumber, balance: updatedAccount.balance
+        accountNumber: updatedAccount.accountNumber, balance: updatedAccount.balance,
+        currency: updatedAccount.currency
     }
     const response = await fetch(`${process.env.REACT_APP_PROD}/account/${id}`, {
         method: 'PUT',
@@ -84,7 +85,8 @@ async function fetchCreate(newAccount) {
     const token = localStorage.getItem('token');
     const data = {
         bankName: newAccount.bankName, accountType: newAccount.accountType,
-        accountNumber: newAccount.accountNumber, balance: newAccount.balance
+        accountNumber: newAccount.accountNumber, balance: newAccount.balance,
+        currency: newAccount.currency
     }
     const response = await fetch(`${process.env.REACT_APP_PROD}/account/save`, {
         method: 'POST',
@@ -105,6 +107,7 @@ async function fetchCreate(newAccount) {
 function Wallet() {
     const [accounts, setAccounts] = useState([]);
     const [currentAccount, setCurrentAccount] = useState(null);
+    const [currencies, setCurrencies] = useState([]);
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -122,12 +125,30 @@ function Wallet() {
                 }
                 const data = await response.json();
                 setAccounts(data);
+                console.log(data);
+            } catch (error) {
+                console.error('Fetch error');
+            }
+        };
+
+        const fetchCurrencies = async () => {
+            try {
+                const response = await fetch(`https://v6.exchangerate-api.com/v6/4997e360e3c90c05c69560bc/codes`, {
+                    method: 'GET',
+                });
+                if(!response.ok) {
+                    console.error('Response error');
+                }
+                const data = await response.json();
+                const codes = data.supported_codes.map(([code, name]) => ({currency_code: code, currency_name: name}));
+                setCurrencies(codes);
             } catch (error) {
                 console.error('Fetch error');
             }
         };
 
         fetchAccounts();
+        fetchCurrencies();
     }, []);
 
     const handleAccountUpdate = async (id, updatedAccount) => {
@@ -199,6 +220,7 @@ function Wallet() {
                 }
                 <AccountModal
                     account={currentAccount}
+                    currencies={currencies}
                     isOpen={!!currentAccount}
                     onClose={() => setCurrentAccount(null)}
                     onSave={handleAccountUpdate}
