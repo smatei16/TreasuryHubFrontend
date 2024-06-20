@@ -11,6 +11,8 @@ import Transaction from "./pages/Transaction/Transaction";
 import Homepage from "./pages/Homepage/Homepage";
 import AccountModal from "./pages/Wallet/AccountModal";
 import Test from "./pages/test";
+import SearchBar from "./pages/test";
+import Investments from "./pages/Investment/Investments";
 
 function App() {
   return (
@@ -41,7 +43,8 @@ function App() {
               <Route path="/wallet" element={<Wallet />}  />
               <Route path="/budgets" element={<Budget />}/>
               <Route path="/transactions" element={<Transaction />}/>
-              <Route path="/test" element={<Test />}/>
+              <Route path="/investments"  element={<Investments />}/>
+              <Route path="/test" element={<SearchBar />}/>
           </Routes>
         </div>
       </Router>
