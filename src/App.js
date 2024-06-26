@@ -13,6 +13,9 @@ import AccountModal from "./pages/Wallet/AccountModal";
 import Test from "./pages/test";
 import SearchBar from "./pages/test";
 import Investments from "./pages/Investment/Investments";
+import Profile from "./pages/Profile/Profile";
+import Feedback from "./pages/Feedback/Feedback";
+import FeedbackSuccess from "./pages/Feedback/FeedbackSuccess";
 
 function App() {
   return (
@@ -44,6 +47,9 @@ function App() {
               <Route path="/budgets" element={<Budget />}/>
               <Route path="/transactions" element={<Transaction />}/>
               <Route path="/investments"  element={<Investments />}/>
+              <Route path="/profile" element={<Profile/>}/>
+              <Route path="/feedback" element={<Feedback/>}/>
+              <Route path="/feedback-success" element={<FeedbackSuccess/>}/>
               <Route path="/test" element={<SearchBar />}/>
           </Routes>
         </div>

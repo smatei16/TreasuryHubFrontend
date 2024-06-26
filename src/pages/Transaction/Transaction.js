@@ -177,10 +177,15 @@ function Transaction() {
                     'Content-Type': 'application/json'
                 }
             });
-            const data = await response.json();
-            await fetchCategories();
-            await fetchAccounts();
-            setTransactions(data);
+            try {
+                const data = await response.json();
+                await fetchCategories();
+                await fetchAccounts();
+                setTransactions(data);
+            } catch (error) {
+                console.error(error);
+            }
+
         };
 
         fetchTransactions();
