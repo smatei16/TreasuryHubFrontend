@@ -113,13 +113,13 @@ function Budget() {
                     }
                 });
                 if(!response.ok) {
-                    console.error('Response error');
+                    console.error('Unauthorized');
                 }
                 const data = await response.json();
                 const sortedData = data.sort((budget1, budget2) => budget1.transactionType > budget2.transactionType ? -1 : 1)
                 setBudgets(sortedData);
             } catch (error) {
-                console.error('Fetch error');
+                console.error('Error fetching categories');
             }
         };
 
