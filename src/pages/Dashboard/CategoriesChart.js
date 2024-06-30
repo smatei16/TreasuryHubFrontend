@@ -21,38 +21,50 @@ ChartJS.register(
 
 const CategoriesChart = ({ type }) => {
     const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchData();
+        const fetchData = async () => {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${process.env.REACT_APP_PROD}/transaction/category-summary/${type}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if(!response.ok) {
+                console.log('Unauthorized');
+                setError("No data to display.")
+            }
+            try {
+                const data = await response.json();
+                setData(data);
+                setError(null);
+            } catch (error) {
+                console.log("Ecountered an error fetching data: " +error);
+                setError("No data to display.");
+            }
+        };
+        if(type) fetchData();
     }, [type]);
 
-    const fetchData = () => {
-        // fetch(`/api/rapoarte/budget-execution?utilizatorId=${utilizatorId}&startDate=${startDate}&endDate=${endDate}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         setData(displayType === 'venituri' ? data.venituri : data.cheltuieli);
-        //     })
-        //     .catch(error => console.error('Error fetching data:', error));
-    };
 
 
-
-    const labels = data.map(item => item.categorie);
     const chartData = {
-        labels: ['Groceries', 'Transportation'],
+        labels: data.categoryNames,
         datasets: [
             {
-                label: 'Execution',
+                label: type === 'INCOME' ? 'Income' : 'Spent',
                 // data: data.map(item => item.suma),
-                data: [1000, 200],
-                backgroundColor: type === 'venituri' ? 'rgba(75, 192, 192, 0.6)' : 'rgba(255, 99, 132, 0.6)',
-                borderColor: type === 'venituri' ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)',
+                data: data.totalPerCategory,
+                backgroundColor: type === 'INCOME' ? 'rgba(75, 192, 192, 0.6)' : 'rgba(255, 99, 132, 0.6)',
+                borderColor: type === 'EXPENSE' ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)',
                 borderWidth: 1,
             },
             {
                 label: 'Buget',
                 // data: data.map(item => item.buget),
-                data: [1200, 400],
+                data: data.categoryBudgets,
                 backgroundColor: 'rgba(255, 206, 86, 0.6)',
                 borderColor: 'rgba(255, 206, 86, 1)',
                 borderWidth: 1,
@@ -75,7 +87,8 @@ const CategoriesChart = ({ type }) => {
 
     return (
         <div className="w-full h-96 bg-white p-4 rounded-lg shadow-md">
-            <Bar data={chartData} options={options}/>
+            {!error && <Bar data={chartData} options={options}/>}
+            { error && <p className="font-xl font-roboto font-bold">{error}</p>}
         </div>
     );
 };
