@@ -9,6 +9,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import {useEffect, useState} from "react";
 
 // Înregistrează componentele necesare
 ChartJS.register(
@@ -21,19 +22,47 @@ ChartJS.register(
     Legend
 );
 const IncomeExpenseChart = () => {
+    const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${process.env.REACT_APP_PROD}/transaction/monthly-summary`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if(!response.ok) {
+                console.log('Unauthorized');
+                setError("No data to display.")
+            }
+            try {
+                const data = await response.json();
+                setData(data);
+                setError(null);
+            } catch (error) {
+                console.log("Ecountered an error fetching data: " +error);
+                setError("No data to display.");
+            }
+        };
+        fetchData();
+    }, []);
+
     const chartData = {
-        labels: ['Jan', 'Feb', 'Mar'], // Ex. ['Jan', 'Feb', 'Mar']
+        labels: data.months,
         datasets: [
             {
-                label: 'Venituri',
-                data: [5000, 6000, 5500], // Ex. [5000, 6000, 5500]
+                label: 'Incomes',
+                data: data.totalIncomes,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 fill: true,
             },
             {
                 label: 'Cheltuieli',
-                data: [4000, 4500, 4800], // Ex. [4000, 4500, 4800]
+                data: data.totalExpenses,
                 borderColor: 'rgba(255, 99, 132, 1)',
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 fill: true,
@@ -48,7 +77,8 @@ const IncomeExpenseChart = () => {
 
     return (
         <div className="w-full h-96 bg-white p-4 rounded-lg shadow-md z-10">
-            <Line data={chartData} options={options} />
+            { !error && <Line data={chartData} options={options} />}
+            { error && <p className="font-xl font-roboto font-bold">{error}</p>}
         </div>
     );
 };

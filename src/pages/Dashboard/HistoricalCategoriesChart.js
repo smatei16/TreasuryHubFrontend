@@ -19,32 +19,45 @@ ChartJS.register(
     Legend
 );
 
-const HistoricalCategoriesChart = ({ category }) => {
+const HistoricalCategoriesChart = ({ category, categoryName }) => {
     const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchData();
+        const fetchData = async () => {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${process.env.REACT_APP_PROD}/transaction/monthly-category/${category}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if(!response.ok) {
+                console.log('Unauthorized');
+                setError("No data to display.")
+            }
+            try {
+                const data = await response.json();
+                setData(data);
+                setError(null);
+                console.log(data);
+            } catch (error) {
+                console.log("Ecountered an error fetching data: " +error);
+                setError("No data to display.");
+            }
+        };
+        if(category) {
+            fetchData();
+        }
     }, [category]);
 
-    const fetchData = () => {
-        // fetch(`/api/rapoarte/budget-execution?utilizatorId=${utilizatorId}&startDate=${startDate}&endDate=${endDate}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         setData(displayType === 'venituri' ? data.venituri : data.cheltuieli);
-        //     })
-        //     .catch(error => console.error('Error fetching data:', error));
-    };
 
-
-
-    const labels = data.map(item => item.categorie);
     const chartData = {
-        labels: ['Jan', 'Feb'],
+        labels: data.months,
         datasets: [
             {
-                label: category,
-                // data: data.map(item => item.suma),
-                data: [1000, 200],
+                label: categoryName,
+                data: data.monthlyExpenses,
                 backgroundColor: 'rgba(255, 99, 132, 0.6)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1,
@@ -67,7 +80,8 @@ const HistoricalCategoriesChart = ({ category }) => {
 
     return (
         <div className="w-full h-96 bg-white p-4 rounded-lg shadow-md">
-            <Bar data={chartData} options={options}/>
+            {!error && <Bar data={chartData} options={options}/>}
+            { error && <p className="font-xl font-roboto font-bold">{error}</p>}
         </div>
     );
 };

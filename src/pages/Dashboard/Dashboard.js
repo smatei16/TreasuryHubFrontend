@@ -28,6 +28,7 @@ export default function Dashboard() {
     const [chart1FilteredCategories, setChart1FilteredCategories] = useState([]);
     const [chart2FilteredCategories, setChart2FilteredCategories] = useState([]);
     const [chart2SelectedCategory, setChart2SelectedCategory] = useState('');
+    const [categoryName, setCategoryName] = useState('');
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -39,8 +40,13 @@ export default function Dashboard() {
                     'Content-Type': 'application/json'
                 }
             });
-            const data = await response.json();
-            setCategories(data);
+            try {
+                const data = await response.json();
+                setCategories(data);
+            } catch (error) {
+                console.log(error);
+            }
+
         };
         fetchCategories();
     }, []);
@@ -55,7 +61,9 @@ export default function Dashboard() {
             <Navbar />
             <div className="min-h-screen bg-gray-100 p-6">
                 <div className="container mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1
+                    {/*md:grid-cols-2*/}
+                     gap-6">
                         <div className="bg-white p-4 rounded-lg shadow-md z-20">
                             <div className="flex justify-center mb-4">
                                 <p className="font-roboto font-bold px-4 py-2 mx-2 bg-color-4 text-color-3 rounded">Last 12 months trends</p>
@@ -91,23 +99,23 @@ export default function Dashboard() {
                                 </select>
                                 <select
                                     className="border border-color-4 text-sm font-roboto rounded-lg block px-4 py-2 mx-2"
-                                    onChange={e => setChart2SelectedCategory(e.target.value)}>
+                                    onChange={e => {setChart2SelectedCategory(e.target.value); setCategoryName(e.target.options[e.target.selectedIndex].text)}}>
                                     <option selected="">Select a category</option>
                                     {chart2FilteredCategories.map(category => (
-                                        <option value={category.name}>{category.name}</option>
+                                        <option value={category.id}>{category.name}</option>
                                     ))}
                                 </select>
                             </div>
-                            <HistoricalCategoriesChart category={chart2SelectedCategory}/>
+                            <HistoricalCategoriesChart category={chart2SelectedCategory} categoryName={categoryName}/>
                         </div>
 
-                        <div className="bg-white p-4 rounded-lg shadow-md z-20">
-                            <div className="flex justify-center mb-4">
-                                <p className="font-roboto font-bold px-4 py-2 mx-2 bg-color-4 text-color-3 rounded">Today
-                                    trending stocks</p>
-                            </div>
-                            <TopGainsChart/>
-                        </div>
+                        {/*<div className="bg-white p-4 rounded-lg shadow-md z-20">*/}
+                        {/*    <div className="flex justify-center mb-4">*/}
+                        {/*        <p className="font-roboto font-bold px-4 py-2 mx-2 bg-color-4 text-color-3 rounded">Today*/}
+                        {/*            trending stocks</p>*/}
+                        {/*    </div>*/}
+                        {/*    <TopGainsChart/>*/}
+                        {/*</div>*/}
 
                     </div>
                 </div>
