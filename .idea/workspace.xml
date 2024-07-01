@@ -6,12 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="96bbafe8-8f86-47d1-aa09-d592674527ce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/CategoriesChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/CategoriesChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/HistoricalCategoriesChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/HistoricalCategoriesChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/IncomeExpenseChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/IncomeExpenseChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/TopGainsChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/TopGainsChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Homepage/Homepage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Homepage/Homepage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Investment/StockModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Investment/StockModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Transaction/Transaction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Transaction/Transaction.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +47,7 @@
     "Node.js.SignUp.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "TH-23",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/PERSONAL/LICENTA/TreasuryHub/treasury-hub-frontend/src/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",

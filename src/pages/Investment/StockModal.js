@@ -53,7 +53,7 @@ function StockModal({ userStock, isOpen, onClose, onSave, onDelete }) {
     useEffect(() => {
         const fetchStockInformation = async () => {
             try {
-                const response = await fetch(`https://financialmodelingprep.com/api/v3/quote/${symbol}?apikey=iQ9IE0esp1r6ONQNVvNwLf6m9HnhBlvU`, {
+                const response = await fetch(`https://financialmodelingprep.com/api/v3/quote/${symbol}?apikey=6A1Emlt3OgDJgpeu77ufEGABHxxrY3DU`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ function StockModal({ userStock, isOpen, onClose, onSave, onDelete }) {
 
         const fetchCompanyInformation = async () => {
             try {
-                const response = await fetch(`https://financialmodelingprep.com/api/v3/search?query=${symbol}&apikey=iQ9IE0esp1r6ONQNVvNwLf6m9HnhBlvU`, {
+                const response = await fetch(`https://financialmodelingprep.com/api/v3/search?query=${symbol}&apikey=6A1Emlt3OgDJgpeu77ufEGABHxxrY3DU`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
