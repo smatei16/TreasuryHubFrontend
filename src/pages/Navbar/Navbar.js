@@ -31,7 +31,7 @@ export default function Navbar() {
                 {/*add max-w-screen-xl and mx-auto to the div below to move logo and buttons to the margin*/}
                 {/*actual p-2, initial p-4*/}
                 <div className="flex flex-wrap items-center justify-between mx-4 p-2">
-                    <a href="/"
+                    <a href="/dashboard"
                        className="flex items-center space-x-3 rtl:space-x-reverse text-2xl font-roboto font-bold hover:font-extrabold text-color-4 whitespace-nowrap">
                         {/*<span className="self-center text-2xl font-bebas-neue font-normal hover:font-bold whitespace-nowrap text-color-4">TREASURY HUB</span>*/}
                         TREASURY HUB

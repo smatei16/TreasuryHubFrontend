@@ -87,7 +87,7 @@ export default function Dashboard() {
                         </div>
 
                         <div className="bg-white p-4 rounded-lg shadow-md z-20">
-                            <div className="flex justify-center mb-4">
+                            <div className="md:flex justify-center mb-4">
                                 <p className="font-roboto font-bold px-4 py-2 mx-2 bg-color-4 text-color-3 rounded">Last
                                     12 months categories trends</p>
                                 <select id="category"
