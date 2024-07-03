@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import logo from "../../resources/logo.png"
 import "./Navbar.css";
@@ -7,6 +7,10 @@ import CurrencyConverter from "../Investment/CurrencyConverter";
 export default function Navbar() {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/');
+    };
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -27,7 +31,7 @@ export default function Navbar() {
                 {/*add max-w-screen-xl and mx-auto to the div below to move logo and buttons to the margin*/}
                 {/*actual p-2, initial p-4*/}
                 <div className="flex flex-wrap items-center justify-between mx-4 p-2">
-                    <a href="/"
+                    <a href="/dashboard"
                        className="flex items-center space-x-3 rtl:space-x-reverse text-2xl font-roboto font-bold hover:font-extrabold text-color-4 whitespace-nowrap">
                         {/*<span className="self-center text-2xl font-bebas-neue font-normal hover:font-bold whitespace-nowrap text-color-4">TREASURY HUB</span>*/}
                         TREASURY HUB
@@ -60,6 +64,7 @@ export default function Navbar() {
                             <NavbarItem to="/wallet" text="Wallet">Wallet</NavbarItem>
                             <NavbarItem to="/investments" text="Investments">Investments</NavbarItem>
                             <NavbarItem to="/profile" text="Profile">Profile</NavbarItem>
+                            <button className="block text-color-4 hover:font-bold font-roboto" onClick={handleLogout}>Sign Out</button>
                         </ul>
                     </div>
                 </div>

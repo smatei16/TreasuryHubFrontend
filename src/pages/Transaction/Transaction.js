@@ -249,33 +249,27 @@ function Transaction() {
 
     const openNewReceiptModal = async () => {
         setLoading(true);
-        try {
-            let imageUrl = '';
-            let receiptInfo = '';
-            const expenseCategories = categories
-                .filter(category => category.transactionType === 'EXPENSE')
-                .map(category => ({
-                    id: category.id,
-                    name: category.name,
-                }));
-            imageUrl = await handleImageUpload(receiptFile);
-            console.log(imageUrl);
-            receiptInfo = await generateReceiptInfo(imageUrl, expenseCategories);
-            console.log(receiptInfo);
-            console.log(receiptInfo.date);
-            console.log(receiptInfo.merchant);
-            console.log(receiptInfo.categories);
-            console.log(expenseCategories);
-            console.log(JSON.stringify(expenseCategories));
+        setGeneratingError(null);
+        let imageUrl = '';
+        let receiptInfo = '';
+        const expenseCategories = categories
+            .filter(category => category.transactionType === 'EXPENSE')
+            .map(category => ({
+                id: category.id,
+                name: category.name,
+            }));
+        imageUrl = await handleImageUpload(receiptFile);
+        console.log(imageUrl);
+        // receiptInfo = await generateReceiptInfo(imageUrl, expenseCategories);
+        generateReceiptInfo(imageUrl, expenseCategories).then((result) => {
+            receiptInfo = result;
             setCurrentReceipt({ date: receiptInfo.date, merchant: receiptInfo.merchant, url: imageUrl, categories: receiptInfo.categories});
             console.log(currentReceipt);
-        } catch (error) {
-            console.error('Error generating transaction:', error);
-            setGeneratingError(error);
             setLoading(false);
-        } finally {
+        }).catch((error) => {
+            setGeneratingError('Error generating transaction info. Please try again');
             setLoading(false);
-        }
+        })
     }
 
     return (
