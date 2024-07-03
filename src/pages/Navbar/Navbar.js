@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import logo from "../../resources/logo.png"
 import "./Navbar.css";
@@ -7,6 +7,10 @@ import CurrencyConverter from "../Investment/CurrencyConverter";
 export default function Navbar() {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/');
+    };
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -60,6 +64,7 @@ export default function Navbar() {
                             <NavbarItem to="/wallet" text="Wallet">Wallet</NavbarItem>
                             <NavbarItem to="/investments" text="Investments">Investments</NavbarItem>
                             <NavbarItem to="/profile" text="Profile">Profile</NavbarItem>
+                            <button className="block text-color-4 hover:font-bold font-roboto" onClick={handleLogout}>Sign Out</button>
                         </ul>
                     </div>
                 </div>
