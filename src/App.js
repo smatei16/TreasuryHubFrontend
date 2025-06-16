@@ -16,6 +16,8 @@ import Investments from "./pages/Investment/Investments";
 import Profile from "./pages/Profile/Profile";
 import Feedback from "./pages/Feedback/Feedback";
 import FeedbackSuccess from "./pages/Feedback/FeedbackSuccess";
+import TC from "./pages/TC/TC";
+import Privacy from "./pages/Privacy/Privacy";
 
 function App() {
   return (
@@ -51,6 +53,8 @@ function App() {
               <Route path="/feedback" element={<Feedback/>}/>
               <Route path="/feedback-success" element={<FeedbackSuccess/>}/>
               <Route path="/test" element={<SearchBar />}/>
+              <Route path="/tc" element={<TC />}/>
+              <Route path="/privacy" element={<Privacy />} />
           </Routes>
         </div>
       </Router>

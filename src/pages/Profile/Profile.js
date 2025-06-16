@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import ParticlesBackground from "../Homepage/ParticlesBackground";
 import Navbar from "../Navbar/Navbar";
 import async from "async";
+import Footer from "../../components/Footer";
 
 export default function Profile() {
     const [currentUser, setCurrentUser] = useState(null);
@@ -149,6 +150,7 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

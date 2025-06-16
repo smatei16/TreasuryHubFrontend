@@ -4,6 +4,7 @@ import Navbar from "../Navbar/Navbar";
 import {TbCategory, TbCategoryMinus, TbCategoryPlus} from "react-icons/tb";
 import BudgetModal from "../Budget/BudgetModal";
 import StockModal from "./StockModal";
+import Footer from "../../components/Footer";
 
 function StockCard({ currentStock, onEdit, onDelete }) {
     const handleDeleteClick = (event) => {
@@ -264,6 +265,7 @@ const Investments = () => {
                     onDelete={handleUserStockDelete}
                 />
             </div>
+            <Footer />
             </div>
 
 

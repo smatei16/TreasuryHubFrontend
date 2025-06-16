@@ -4,6 +4,7 @@ import Navbar from "../Navbar/Navbar";
 import AccountModal from "./AccountModal";
 import ParticlesBackground from "../Homepage/ParticlesBackground";
 import {MdAccountBalance} from "react-icons/md";
+import Footer from "../../components/Footer";
 
 function BankAccountCard({ account, onEdit, onDelete }) {
     const handleDeleteClick = (event) => {
@@ -227,6 +228,7 @@ function Wallet() {
                     onDelete={handleDeleteAccount}
                 />
             </div>
+            <Footer />
         </div>
 
         // <div className="wallet-container">
