@@ -5,6 +5,7 @@ import IncomeExpenseChart from "./IncomeExpenseChart";
 import CategoriesChart from "./CategoriesChart";
 import HistoricalCategoriesChart from "./HistoricalCategoriesChart";
 import TopGainsChart from "./TopGainsChart";
+import Footer from "../../components/Footer";
 
 const getCurrentDate = () => {
     const today = new Date();
@@ -120,6 +121,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

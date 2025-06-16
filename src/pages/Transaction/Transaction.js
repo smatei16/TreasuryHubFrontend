@@ -10,6 +10,7 @@ import {FaArrowCircleRight} from "react-icons/fa";
 import {MdOutlineDocumentScanner} from "react-icons/md";
 import ReceiptModal from "./ReceiptModal";
 import {generateReceiptInfo, handleImageUpload} from "./TransactionUtils";
+import Footer from "../../components/Footer";
 
 function TransactionCard({ transaction, onEdit, onDelete }) {
     // const categoryName = categories[transaction.transaction];
@@ -382,6 +383,7 @@ function Transaction() {
                     onSave={handleTransactionUpdate}
                     />
             </div>
+            <Footer />
         </div>
 
 

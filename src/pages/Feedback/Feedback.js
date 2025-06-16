@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import ParticlesBackground from "../Homepage/ParticlesBackground";
 import Navbar from "../Navbar/Navbar";
 import async from "async";
+import Footer from "../../components/Footer";
 
 export default function Feedback() {
     const [error, setError] = useState("");
@@ -111,6 +112,7 @@ export default function Feedback() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

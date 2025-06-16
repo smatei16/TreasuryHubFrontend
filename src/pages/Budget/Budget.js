@@ -5,6 +5,7 @@ import BudgetModal from "./BudgetModal";
 import {MdAccountBalance} from "react-icons/md";
 import ParticlesBackground from "../Homepage/ParticlesBackground";
 import {TbCategory, TbCategoryMinus, TbCategoryPlus} from "react-icons/tb";
+import Footer from "../../components/Footer";
 
 function BudgetCard({ currentBudget, onEdit, onDelete }) {
     const handleDeleteClick = (event) => {
@@ -220,6 +221,7 @@ function Budget() {
                     onDelete={handleBudgetDelete}
                 />
             </div>
+            <Footer />
         </div>
 
         // <div className="budget-container">
